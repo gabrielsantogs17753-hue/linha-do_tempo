@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para o Amor da Minha Vida 💕</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Great+Vibes&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ❤️ FLOATING HEARTS CONTAINER -->
+  <div id="hearts-container" aria-hidden="true"></div>
+
+  <!-- 🌸 PETALS CONTAINER -->
+  <div id="petals-container" aria-hidden="true"></div>
+
+  <!-- ══════════════════════════════════════
+       🔐 SEÇÃO 1 — LOGIN
+  ══════════════════════════════════════ -->
+  <section id="section-login" class="section active">
+    <div class="login-bg-overlay"></div>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-icon">💌</div>
+        <h1 class="login-title">Um Presente Só Seu</h1>
+        <p class="login-subtitle">Entre com seu coração aberto, meu amor</p>
+
+        <div class="login-form">
+          <div class="input-group">
+            <label for="username">Usuário</label>
+            <input type="text" id="username" placeholder="quem é você para mim?" autocomplete="off" />
+          </div>
+          <div class="input-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" placeholder="uma data muito especial..." autocomplete="off" />
+          </div>
+
+          <div id="hint-box" class="hint-box hidden">
+            <span id="hint-text"></span>
+          </div>
+
+          <button id="btn-login" class="btn-love">
+            <span>Abrir com Amor</span>
+            <span class="btn-heart">♥</span>
+          </button>
+
+          <div id="error-msg" class="error-msg hidden">Hmm... tente novamente, meu bem 💭</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       💌 SEÇÃO 2 — MENSAGEM SECRETA
+  ══════════════════════════════════════ -->
+  <section id="section-message" class="section">
+    <div class="message-bg-overlay"></div>
+    <div class="message-container">
+      <div class="message-card">
+        <div class="message-roses">🌹</div>
+        <h2 class="message-greeting">Para Você, Meu Amor</h2>
+        <div class="message-divider">
+          <span>♥</span>
+          <span>♥</span>
+          <span>♥</span>
+        </div>
+        <div class="message-text">
+          <p>Existem palavras que tentam descrever o que sinto por você, mas nenhuma delas chega perto da verdade. Você é a música que toca quando tudo está em silêncio. É a cor que aparece quando o dia é cinza. É o lar que eu encontrei sem estar procurando.</p>
+          <p>Minha gatinha, você é mais linda do que qualquer coisa que eu já vi — não apenas pelo que seus olhos mostram, mas pelo que sua alma carrega. Cada sorriso seu é um raio de sol que aquece até o que eu pensava ser impossível de aquecer.</p>
+          <p>Você, minha futura esposa, é a prova de que o amor de verdade não apenas existe — ele tem o seu nome, o seu jeito, o seu cheiro, o seu abraço.</p>
+          <p>Guardo em mim cada momento ao seu lado como tesouros que nenhuma distância e nenhum tempo poderiam apagar. E a cada dia que passa, eu me apaixono mais. Mais. Sempre mais.</p>
+          <p class="message-signature">Com todo o meu amor, sempre e para sempre.<br/><em>— Seu amor ♥</em></p>
+        </div>
+        <button id="btn-enter-gallery" class="btn-love btn-enter">
+          <span>Entrar nas Nossas Memórias</span>
+          <span class="btn-heart">♥</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       📸 SEÇÃO 3 — GALERIA / SLIDESHOW
+  ══════════════════════════════════════ -->
+  <section id="section-gallery" class="section">
+    <div class="gallery-bg-overlay"></div>
+
+    <!-- MUSIC PLAYER -->
+    <div id="music-player" class="music-player">
+      <button id="btn-play-pause" class="music-btn" title="Play/Pause">
+        <span id="play-icon">▶</span>
+      </button>
+      <div class="music-info">
+        <span class="music-note">♪</span>
+        <span class="music-title">Nossa Música</span>
+      </div>
+      <div class="volume-control">
+        <span>🔊</span>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.5" />
+      </div>
+    </div>
+
+    <!-- YOUTUBE AUDIO (hidden) -->
+    <div id="yt-player" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;"></div>
+
+    <!-- SLIDESHOW -->
+    <div class="slideshow-wrapper">
+      <div id="slideshow" class="slideshow">
+        <!-- Slides are injected by JS -->
+      </div>
+
+      <!-- NAVIGATION -->
+      <button id="prev-btn" class="slide-nav prev-btn" aria-label="Foto anterior">‹</button>
+      <button id="next-btn" class="slide-nav next-btn" aria-label="Próxima foto">›</button>
+
+      <!-- PROGRESS -->
+      <div class="slideshow-progress">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+
+      <!-- COUNTER -->
+      <div id="photo-counter" class="photo-counter">
+        <span id="current-photo">1</span> / <span id="total-photos">86</span>
+      </div>
+
+      <!-- AUTO/MANUAL TOGGLE -->
+      <button id="btn-autoplay" class="btn-autoplay active" title="Auto / Manual">
+        <span id="autoplay-icon">⏸</span> Auto
+      </button>
+    </div>
+
+    <!-- LINK TO DECLARATION -->
+    <button id="btn-to-declaration" class="btn-next-section">
+      Continue ↓
+    </button>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       💍 SEÇÃO 3.5 — DECLARAÇÃO FINAL
+  ══════════════════════════════════════ -->
+  <section id="section-declaration" class="section">
+    <div class="declaration-bg-overlay"></div>
+    <div class="declaration-container">
+      <div class="declaration-card">
+
+        <div class="declaration-icon">💍</div>
+        <h2 class="declaration-title">Minha Declaração</h2>
+        <div class="declaration-divider">
+          <span>✦</span><span>♥</span><span>✦</span>
+        </div>
+
+        <div class="declaration-text">
+          <p>Minha gatinha, se você chegou até aqui, é porque eu queria que você visse o quanto você significa para mim. Cada foto que você acabou de ver é um pedaço da minha história favorita — a história que vivemos juntos e que ainda vamos viver.</p>
+
+          <p>Você não é apenas linda. Você é a mulher que me faz acreditar que o amor de verdade existe, que ele tem forma, tem voz, tem cheiro. Tem o seu nome.</p>
+
+          <p>Eu te escolho. Hoje, amanhã e em cada dia que ainda não tem nome. Te escolho quando você ri e quando você chora, quando o dia é fácil e quando é difícil. Te escolho sempre, meu amor.</p>
+
+          <p>Você é a minha casa, o meu lar, a minha paz. E se um dia eu puder te chamar de minha esposa diante do mundo inteiro, eu serei o homem mais feliz que já existiu.</p>
+
+          <p class="declaration-signature">
+            Até o infinito e além — e depois ainda um pouco mais.<br/>
+            <em>Com todo o meu amor, para sempre. ♥</em>
+          </p>
+        </div>
+
+        <button id="btn-to-counter" class="btn-love btn-enter" style="margin-top:2rem;">
+          <span>Ver o nosso tempo juntos</span>
+          <span class="btn-heart">♥</span>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       ⏳ SEÇÃO 4 — CONTADOR + RELÓGIO
+  ══════════════════════════════════════ -->
+  <section id="section-counter" class="section">
+    <div class="counter-bg-overlay"></div>
+    <div class="counter-container">
+
+      <h2 class="counter-title">Cada Segundo ao Seu Lado</h2>
+      <p class="counter-subtitle">Desde que você se tornou minha, meu amor</p>
+      <p class="counter-date-label">18 de Novembro de 2025</p>
+
+      <div class="counter-grid">
+        <div class="counter-card">
+          <span id="cnt-days" class="counter-number">000</span>
+          <span class="counter-label">Dias</span>
+        </div>
+        <div class="counter-card">
+          <span id="cnt-hours" class="counter-number">00</span>
+          <span class="counter-label">Horas</span>
+        </div>
+        <div class="counter-card">
+          <span id="cnt-minutes" class="counter-number">00</span>
+          <span class="counter-label">Minutos</span>
+        </div>
+        <div class="counter-card">
+          <span id="cnt-seconds" class="counter-number">00</span>
+          <span class="counter-label">Segundos</span>
+        </div>
+      </div>
+
+      <div class="counter-message">
+        <p>E em cada um desses segundos, eu te amei.</p>
+      </div>
+
+      <!-- INFINITO -->
+      <div class="infinity-wrapper">
+        <div class="infinity-symbol">&#8734;</div>
+        <p class="infinity-text">Tempo que vamos ficar juntos</p>
+        <p class="infinity-sub">Para sempre. Sem fim. Eternamente.</p>
+      </div>
+
+      <!-- RELÓGIO -->
+      <div class="clock-wrapper">
+        <h3 class="clock-title">Agora, neste momento</h3>
+        <div class="clock-display">
+          <span id="clock-time" class="clock-time">00:00:00</span>
+          <span id="clock-date" class="clock-date"></span>
+        </div>
+      </div>
+
+      <!-- BACK TO GALLERY -->
+      <button id="btn-to-gallery" class="btn-love btn-back">
+        <span>↑ Voltar às Memórias</span>
+      </button>
+
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
