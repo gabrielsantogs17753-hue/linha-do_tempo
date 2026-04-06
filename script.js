@@ -5,22 +5,9 @@
 'use strict';
 
 // ─────────────────────────────────────────────────────
-// 📸 FOTOS — Cole aqui os links diretos das suas fotos
-//    do Google Drive (use links de imagem direta,
-//    exemplo: https://drive.google.com/uc?export=view&id=ID_DA_FOTO)
-//
-//    Para pegar o ID de cada foto no Google Drive:
-//    1. Clique com botão direito na foto → "Compartilhar"
-//    2. Copie o link, ele terá o formato:
-//       https://drive.google.com/file/d/XXXXXXX/view
-//    3. O ID é o trecho XXXXXXX
-//    4. Monte o link: https://drive.google.com/uc?export=view&id=XXXXXXX
-//
-//    OU: Use qualquer URL de imagem direta (https://... .jpg/.png)
+// 📸 FOTOS
 // ─────────────────────────────────────────────────────
 const PHOTOS = [
-  // ↓ SUBSTITUA pelas URLs das suas 86 fotos ↓
-  // Exemplo com placeholders românticos enquanto você não adiciona as fotos:
   "./carmem/foto_01.jpg",
   "./carmem/foto_02.jpg",
   "./carmem/foto_03.jpg",
@@ -106,15 +93,7 @@ const PHOTOS = [
   "./carmem/foto_83.jpg",
   "./carmem/foto_84.jpg",
   "./carmem/foto_85.jpg",
-  // Adicione mais fotos aqui...
 ];
-
-// ─────────────────────────────────────────────────────
-// 🎵 YOUTUBE VIDEO ID
-//    Link: https://youtu.be/GQi-hQtuvp8
-//    ID: GQi-hQtuvp8
-// ─────────────────────────────────────────────────────
-const YT_VIDEO_ID = 'c-uS4yp5Zxw';
 
 // ─────────────────────────────────────────────────────
 // 🔐 CREDENCIAIS
@@ -189,7 +168,6 @@ function spawnPetal() {
 
 setInterval(spawnHeart, 800);
 setInterval(spawnPetal, 1200);
-// Spawn inicial
 for (let i = 0; i < 5; i++) setTimeout(spawnHeart, i * 200);
 for (let i = 0; i < 4; i++) setTimeout(spawnPetal, i * 300);
 
@@ -219,13 +197,11 @@ function handleLogin() {
   const pass = $('password').value.trim();
 
   if (user === VALID_USER && pass === VALID_PASS) {
-    // SUCCESS
     const card = document.querySelector('.login-card');
     card.style.transform = 'scale(1.05)';
     card.style.opacity = '0.8';
     setTimeout(() => goTo(secLogin, secMessage), 400);
   } else {
-    // FAIL
     loginAttempts++;
     const errorEl = $('error-msg');
     const hintBox = $('hint-box');
@@ -236,7 +212,6 @@ function handleLogin() {
     $('password').style.borderColor = 'rgba(232,87,122,0.8)';
     setTimeout(() => { $('password').style.borderColor = ''; }, 1000);
 
-    // Show hints
     const hintIdx = Math.min(loginAttempts - 1, HINTS.length - 1);
     if (loginAttempts >= 1) {
       hintText.textContent = HINTS[hintIdx];
@@ -252,78 +227,36 @@ $('btn-enter-gallery').addEventListener('click', () => {
   goTo(secMessage, secGallery);
   setTimeout(() => {
     initSlideshow();
-    initYouTubePlayer();
+    initAudio();
   }, 1300);
 });
 
 // ══════════════════════════════════════════════════════
-// 7. YOUTUBE PLAYER (API)
+// 7. AUDIO PLAYER (MP3 local — sem propaganda)
 // ══════════════════════════════════════════════════════
-let ytPlayer = null;
-let ytReady  = false;
-let ytVolume = 50;
+const audio = new Audio('./musica.mp3');
+audio.loop = true;
+audio.volume = 0.5;
 
-function loadYouTubeAPI() {
-  if (document.querySelector('script[src*="youtube.com/iframe_api"]')) return;
-  const tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
-}
-
-window.onYouTubeIframeAPIReady = function () {
-  ytReady = true;
-  if (document.getElementById('section-gallery').classList.contains('active')) {
-    createYTPlayer();
-  }
-};
-
-function initYouTubePlayer() {
-  loadYouTubeAPI();
-  if (ytReady) createYTPlayer();
-}
-
-function createYTPlayer() {
-  if (ytPlayer) return;
-  ytPlayer = new YT.Player('yt-player', {
-    height: '1',
-    width: '1',
-    videoId: YT_VIDEO_ID,
-    playerVars: {
-      autoplay: 1,
-      loop: 1,
-      playlist: YT_VIDEO_ID,
-      controls: 0,
-      disablekb: 1,
-      modestbranding: 1,
-      rel: 0,
-    },
-    events: {
-      onReady: (e) => {
-        e.target.setVolume(ytVolume);
-        e.target.playVideo();
-        $('play-icon').textContent = '⏸';
-      },
-    }
+function initAudio() {
+  audio.play().catch(() => {
+    document.addEventListener('click', () => audio.play(), { once: true });
   });
+  $('play-icon').textContent = '⏸';
 }
 
-// Play / Pause button
 $('btn-play-pause').addEventListener('click', () => {
-  if (!ytPlayer) return;
-  const state = ytPlayer.getPlayerState();
-  if (state === YT.PlayerState.PLAYING) {
-    ytPlayer.pauseVideo();
-    $('play-icon').textContent = '▶';
-  } else {
-    ytPlayer.playVideo();
+  if (audio.paused) {
+    audio.play();
     $('play-icon').textContent = '⏸';
+  } else {
+    audio.pause();
+    $('play-icon').textContent = '▶';
   }
 });
 
-// Volume slider
 $('volume-slider').addEventListener('input', e => {
-  ytVolume = Math.round(parseFloat(e.target.value) * 100);
-  if (ytPlayer) ytPlayer.setVolume(ytVolume);
+  audio.volume = parseFloat(e.target.value);
 });
 
 // ══════════════════════════════════════════════════════
@@ -332,11 +265,11 @@ $('volume-slider').addEventListener('input', e => {
 let currentSlide  = 0;
 let autoplayTimer = null;
 let isAutoplay    = true;
-const AUTOPLAY_INTERVAL = 5000; // 5s por foto
+const AUTOPLAY_INTERVAL = 5000;
 
 function initSlideshow() {
   const container = $('slideshow');
-  if (container.children.length > 0) return; // já inicializado
+  if (container.children.length > 0) return;
 
   const photos = PHOTOS.length > 0 ? PHOTOS : [];
   $('total-photos').textContent = photos.length;
@@ -365,10 +298,8 @@ function updateSlide(idx) {
   currentSlide = (idx + slides.length) % slides.length;
   slides[currentSlide]?.classList.add('active');
 
-  // Counter
   $('current-photo').textContent = currentSlide + 1;
 
-  // Progress bar
   const pct = ((currentSlide + 1) / slides.length) * 100;
   $('progress-bar').style.width = pct + '%';
 }
@@ -378,7 +309,6 @@ function startAutoplay() {
   autoplayTimer = setInterval(() => {
     const slides = document.querySelectorAll('.slide');
     if (currentSlide === slides.length - 1) {
-      // última foto — vai para a declaração
       stopAutoplay();
       setTimeout(() => goTo(secGallery, secDeclaration), 1500);
     } else {
@@ -391,10 +321,9 @@ function stopAutoplay() {
   if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; }
 }
 
-// NAV BUTTONS
 $('prev-btn').addEventListener('click', () => {
   updateSlide(currentSlide - 1);
-  if (isAutoplay) startAutoplay(); // reset timer
+  if (isAutoplay) startAutoplay();
 });
 
 $('next-btn').addEventListener('click', () => {
@@ -402,7 +331,6 @@ $('next-btn').addEventListener('click', () => {
   if (isAutoplay) startAutoplay();
 });
 
-// AUTOPLAY TOGGLE
 $('btn-autoplay').addEventListener('click', () => {
   isAutoplay = !isAutoplay;
   const btn = $('btn-autoplay');
@@ -417,7 +345,6 @@ $('btn-autoplay').addEventListener('click', () => {
   }
 });
 
-// KEYBOARD NAVIGATION
 document.addEventListener('keydown', e => {
   if (!secGallery.classList.contains('active')) return;
   if (e.key === 'ArrowRight' || e.key === ' ') {
@@ -431,7 +358,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// SWIPE SUPPORT
 let touchStartX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
 document.addEventListener('touchend', e => {
@@ -501,7 +427,6 @@ function updateCounter() {
 // ══════════════════════════════════════════════════════
 function updateClock() {
   const now = new Date();
-
   const hh = pad(now.getHours(), 2);
   const mm = pad(now.getMinutes(), 2);
   const ss = pad(now.getSeconds(), 2);
@@ -516,14 +441,12 @@ setInterval(() => {
   updateClock();
 }, 1000);
 
-// Primeira chamada imediata
 updateCounter();
 updateClock();
 
 // ══════════════════════════════════════════════════════
-// 12. ENTRADA COM ANIMAÇÃO DOS NÚMEROS DO CONTADOR
+// 12. ANIMAÇÃO DO CONTADOR
 // ══════════════════════════════════════════════════════
-// Observer para animar quando a seção ficar visível
 const counterObserver = new MutationObserver(() => {
   if (secCounter.classList.contains('active')) {
     animateCounterCards();
@@ -545,9 +468,8 @@ function animateCounterCards() {
 }
 
 // ══════════════════════════════════════════════════════
-// 13. TELA DE CARREGAMENTO DAS IMAGENS
+// 13. PRELOAD DE IMAGENS
 // ══════════════════════════════════════════════════════
-// Pre-load das primeiras imagens
 function preloadPhotos(startIdx, count) {
   const end = Math.min(startIdx + count, PHOTOS.length);
   for (let i = startIdx; i < end; i++) {
@@ -556,37 +478,3 @@ function preloadPhotos(startIdx, count) {
   }
 }
 preloadPhotos(0, 5);
-
-// ══════════════════════════════════════════════════════
-// 14. AUTOPLAY HINT (após 3s no slideshow)
-// ══════════════════════════════════════════════════════
-// Preload próxima foto quando o slide muda
-document.addEventListener('DOMContentLoaded', () => {
-  // Observar mudanças de slide para preload
-});
-
-// ══════════════════════════════════════════════════════
-// ❗ INSTRUÇÕES PARA ADICIONAR SUAS FOTOS
-// ══════════════════════════════════════════════════════
-/*
-  Como adicionar as 86 fotos do Google Drive:
-
-  OPÇÃO 1 — Links diretos do Drive:
-  1. Para cada foto, clique com botão direito → "Obter link"
-  2. Copie o ID da foto (está na URL depois de /d/)
-  3. Monte: https://drive.google.com/uc?export=view&id=SEU_ID
-  4. Cole na array PHOTOS acima
-
-  OPÇÃO 2 — Fazer upload para um host de imagens gratuito:
-  - https://imgbb.com
-  - https://postimages.org
-  - Cole os links diretos na array PHOTOS
-
-  OPÇÃO 3 — Hospedar o site com as fotos localmente:
-  - Coloque as fotos na mesma pasta do site
-  - Use caminhos relativos: "./fotos/foto1.jpg"
-
-  ⚠️ ATENÇÃO: Links do Google Drive podem não funcionar
-  diretamente em todos os navegadores por causa de CORS.
-  A opção mais confiável é usar um host de imagens dedicado.
-*/
